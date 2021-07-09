@@ -1,9 +1,26 @@
+import { useEffect } from 'react';
 import './App.css';
-import { getGists } from './services/gistsApi';
+import { getNotePads, createNotePad } from './services/notepadApi';
 
 function App()
 {
-  getGists().then(console.log());
+  useEffect(() =>
+  {
+
+    // createNotePad({
+    //   title: {
+    //     content: 'hi'
+    //   }
+    // }).then((data) =>
+    // {
+    //   console.log("createNotePad", data)
+    // });
+    getNotePads().then((data) =>
+    {
+      console.log("data", data)
+    });
+  }, []);
+
   return (
     <div className="App">
       Hey here is our basic react app, nice to see you :)
