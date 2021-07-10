@@ -1,8 +1,20 @@
-.App {
-  text-align: center;
+:root {
+  --blue: #39ACDC;
+  --red: #EC3646;
+  --green: #57B93E;
+  --placeholder: #AAA;
+  --border: #CCC;
+  --bodyBackground: #EEE;
+  --gray: #333;
+  --font: 'Arial';
 }
 
+.App {
+  text-align: center;
+  font-family: 'Arial';
+  background-color: #EEE;
+}
 
-:root {
-  
+textarea:focus, input:focus {
+  color: #333;
 }

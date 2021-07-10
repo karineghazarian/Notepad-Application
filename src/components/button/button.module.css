@@ -1,0 +1,17 @@
+.button {
+    border-radius: 4px;
+    border: 1px solid #27272717;
+    display: block;
+    font-size: 14px;
+    height: 35px;
+    line-height: 16px;
+    min-width: 80px;
+    max-width: 40px;
+    color: white;
+    font-family: var(--font);
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
