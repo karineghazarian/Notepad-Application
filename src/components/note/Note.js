@@ -5,60 +5,78 @@ import PropTypes from 'prop-types';
 import Input from "../input/Input";
 import Textarea from "../textarea/Textarea";
 import Button from "../button/Button";
-import { maxCharacter255, maxCharacter1024, isValid } from "../../utils/validation";
-
+import { maxCharacter255, maxCharacter1000, isValid } from "../../utils/validation";
 
 function Note(props)
 {
-    const [inputValue, setInputValue] = useState("");
-    const [textareaValue, setTextareaValue] = useState("");
-    const [isInputInvalid, setIsInputInvalid] = useState(false);
-    const [isTextareaInvalid, setTextareaInvalid] = useState(false);
-    const { title, noteText, toCreate } = props;
+    const [noteTitle, setNoteTitle] = useState("");
+    const [noteText, setNoteText] = useState("");
+    const [isTitleUnique, setIsTitleUnique] = useState(false);
+    const [isTitleInvalid, setIsTitleInvalid] = useState(false);
+    const [isNoteTextInvalid, setIsNoteTextInvalid] = useState(false);
+    const { title, text, toCreate, addNote, titleUniqueChecker, deleteNote, id, updateNote } = props;
 
     useEffect(() =>
     {
-        setInputValue(title)
+        setNoteTitle(title)
     }, [title])
 
     useEffect(() =>
     {
-        setTextareaValue(noteText)
-    }, [noteText])
+        setNoteText(text)
+    }, [text])
 
-    function handleInputChange(e)
+    function handleTitleChange(e)
     {
         const { value } = e.target
-        if (isValid(maxCharacter255, value) && (value || (inputValue && !value)))
+        const isUniqueTitle = titleUniqueChecker(value);
+        if (isValid(maxCharacter255, value) && (value || (noteTitle && !value)))
         {
-            setIsInputInvalid(false);
-            setInputValue(e.target.value);
-            if (!value)
+            setNoteTitle(value);
+            setIsTitleInvalid(false);
+            if (!value || !isUniqueTitle)
             {
-                setIsInputInvalid(true)
+                setIsTitleInvalid(true)
             }
         }
         else
         {
-            setIsInputInvalid(true)
+            setIsTitleInvalid(true)
+        }
+        setIsTitleUnique(isUniqueTitle)
+    }
+
+    function handleNoteTextChange(e)
+    {
+        const { value } = e.target
+        if (isValid(maxCharacter1000, value) && (value || (noteText && !value)))
+        {
+            setIsNoteTextInvalid(false);
+            setNoteText(value);
+            if (!value)
+            {
+                setIsNoteTextInvalid(true)
+            }
+        }
+        else
+        {
+            setIsNoteTextInvalid(true)
         }
     }
 
-    function handleTextAreaChange(e)
+    function handleAddNote()
     {
-        const { value } = e.target
-        if (isValid(maxCharacter1024, value) && (value || (textareaValue && !value)))
+        if (noteTitle && noteText && typeof addNote === "function")
         {
-            setTextareaInvalid(false);
-            setTextareaValue(e.target.value);
-            if (!value)
-            {
-                setTextareaInvalid(true)
-            }
-        }
-        else
-        {
-            setTextareaInvalid(true)
+            addNote({
+                title: noteTitle,
+                text: noteText,
+                id: Date.now()
+            });
+            setNoteTitle("");
+            setNoteText("");
+            setIsNoteTextInvalid(false);
+            setIsTitleInvalid(false);
         }
     }
 
@@ -67,32 +85,34 @@ function Note(props)
             <div className={styles.inputTextareaContainer}>
                 <Input
                     placeholder={"Enter note title..."}
-                    value={inputValue}
-                    handleChange={handleInputChange}
-                    isInvalid={isInputInvalid}
-                    pattern={maxCharacter255}
-                    errorMessage={inputValue ? "* Maximum 255 characters are allowed" : "*Title is not allowed to be empty!"}
-                    disabled={!toCreate}>
-                    {title}
-                </Input>
+                    value={noteTitle}
+                    handleChange={handleTitleChange}
+                    isInvalid={isTitleInvalid}
+                    errorMessage={noteTitle ? (!isTitleUnique ? "*Note title must be unique" : "* Maximum 255 characters are allowed") : "*Title is not allowed to be empty!"}
+                    name={"note title"}
+                    id={id}
+                />
                 <Textarea
                     placeholder={"Enter a note..."}
-                    value={textareaValue}
-                    handleChange={handleTextAreaChange}
-                    isInvalid={isTextareaInvalid}
-                    pattern={maxCharacter1024}
-                    errorMessage={textareaValue ? "*Maximum 1024 characters are allowed" : "*Title is not allowed to be empty!"}
-                    disabled={!toCreate}
-
+                    value={noteText}
+                    handleChange={handleNoteTextChange}
+                    isInvalid={isNoteTextInvalid}
+                    errorMessage={noteText ? "*Maximum 1024 characters are allowed" : "*Title is not allowed to be empty!"}
+                    name={"note text"}
+                    id={id}
                 />
             </div>
             {toCreate ?
-                <Button style={{ backgroundColor: "var(--green)" }}>
+                <Button
+                    style={{ backgroundColor: "var(--green)" }}
+                    onClick={handleAddNote}
+                    disabled={!noteTitle || !noteText || isTitleInvalid || isNoteTextInvalid}>
                     Add
                 </Button>
                 :
                 <Button style={{ backgroundColor: "var(--red)" }}
-                    className={styles.buttonContainer}>
+                    className={styles.buttonContainer}
+                    onClick={() => deleteNote(id)}>
                     Delete
                 </Button>
             }
@@ -102,14 +122,22 @@ function Note(props)
 
 Note.defaultPropTypes = {
     title: "",
-    noteText: "",
-    toCreate: false
+    text: "",
+    toCreate: false,
+    deleteNote: () => { },
+    id: Date.now(),
+    updateNote: () => { }
 }
 
 Note.propTypes = {
     title: PropTypes.string,
-    noteText: PropTypes.string,
-    toCreate: PropTypes.bool
+    text: PropTypes.string,
+    toCreate: PropTypes.bool,
+    addNote: PropTypes.func,
+    titleUniqueChecker: PropTypes.func.isRequired,
+    deleteNote: PropTypes.func,
+    id: PropTypes.number,
+    updateNote: PropTypes.func
 }
 
 export default React.memo(Note);

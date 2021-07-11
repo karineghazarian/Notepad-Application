@@ -4,17 +4,16 @@ import styles from "./input.module.css";
 
 function Input(props)
 {
-    const { type, placeholder, value, handleChange, pattern, isInvalid, errorMessage, disabled } = props;
+    const { type, placeholder, value, handleChange, isInvalid, errorMessage, disabled, name } = props;
     return (
         <div className={styles.inputContainer}>
             <input
                 value={value}
                 type={type}
-                name="input-form"
+                name={name}
                 onChange={handleChange}
                 placeholder={placeholder}
                 className={styles.input}
-                pattern={pattern}
                 disabled={disabled}
             />
             {isInvalid ? <span className={styles.errorMessage}>{errorMessage}</span> : null}
@@ -25,10 +24,10 @@ function Input(props)
 Input.defaultPropTypes = {
     type: "text",
     placeholder: "Type a text",
-    pattern: "",
     isInvalid: false,
     errorMessage: "Error",
-    disabled: false
+    disabled: false,
+    name: "input"
 }
 
 Input.propTypes = {
@@ -36,10 +35,10 @@ Input.propTypes = {
     placeholder: PropTypes.bool,
     handleChange: PropTypes.func.isRequired,
     value: PropTypes.any.isRequired,
-    pattern: PropTypes.string,
     isInvalid: PropTypes.bool,
     errorMessage: PropTypes.string,
     disabled: PropTypes.bool,
+    name: PropTypes.string
 }
 
 export default React.memo(Input);

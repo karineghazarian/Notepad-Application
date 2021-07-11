@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./notepad.module.css";
 import Note from "../note/Note";
 import Input from "../input/Input";
@@ -7,8 +7,13 @@ import { maxCharacter255, isValid } from "../../utils/validation"
 
 function Notepad()
 {
+    const [notepad, setNotepad] = useState({
+        title: "",
+        notes: []
+    })
     const [notepadTitle, setNotepadTitle] = useState("");
     const [isTitleInValid, setIsTitleInValid] = useState(false);
+    const storage = window.localStorage;
 
     function handleChangeTitle(e)
     {
@@ -25,6 +30,47 @@ function Notepad()
         else
         {
             setIsTitleInValid(true)
+        }
+    }
+
+    function titleUniqueChecker(title)
+    {
+        const note = notepad.notes.find((note) => note.title === title);
+        return !note;
+    }
+
+    function addNote(note)
+    {
+        setNotepad((prevNotepad) => (
+            {
+                ...prevNotepad,
+                notes: [...prevNotepad.notes, note]
+            }
+        ));
+    }
+
+    function deleteNote(id)
+    {
+        setNotepad((prevNotepad) => (
+            {
+                ...prevNotepad,
+                notes: prevNotepad.notes.filter((note) => note.id !== id)
+            }
+        ));
+    }
+
+    function updateNote(noteToChange)
+    {
+        const foundNote = notepad.notes.find((note) => note.id === noteToChange.id);
+        const index = notepad.notes.indexOf(foundNote);
+        if (index !== -1)
+        {
+            setNotepad((prevNotepad) => (
+                {
+                    ...prevNotepad,
+                    notes: [...prevNotepad].splice(index, 1, noteToChange)
+                }
+            ))
         }
     }
 
@@ -48,15 +94,25 @@ function Notepad()
             </div>
             <span className={styles.myNotesSpan}>My Notes</span>
             <Note
+                key={"create"}
                 toCreate
-                title={""}
-                noteText={""}
+                addNote={addNote}
+                titleUniqueChecker={titleUniqueChecker}
             />
-            <Note
-                title={"note1"}
-                noteText={"ha ha ha ha ha"}
-            />
+            {
+                notepad.notes.map((note) =>
+                (
+                    <Note
+                        key={note.id}
+                        title={note.title}
+                        text={note.text}
+                        id={note.id}
+                        deleteNote={deleteNote}
+                        titleUniqueChecker={titleUniqueChecker}
+                    />
+                ))
+            }
         </div>
     )
 }
-export default React.memo(Notepad)
+export default Notepad

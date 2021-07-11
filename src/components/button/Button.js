@@ -4,13 +4,15 @@ import styles from "./button.module.css";
 
 function Button(props)
 {
-    const { disabled, children, className, style } = props;
+    const { disabled, children, className, style, onClick } = props;
 
     return (
         <button
             disabled={disabled}
             className={`${styles.button} ${disabled ? styles.disabled : ""} ${className}`}
-            style={style}>
+            style={style}
+            onClick={onClick}
+        >
             {children}
         </button>
     );
@@ -19,12 +21,14 @@ function Button(props)
 Button.defaultPropTypes = {
     disabled: false,
     className: "",
-    style: {}
+    style: {},
+    onClick: () => { }
 }
 Button.propTypes = {
     disabled: PropTypes.bool,
     className: PropTypes.string,
-    style: PropTypes.object
+    style: PropTypes.object,
+    onClick: PropTypes.func
 }
 
 export default React.memo(Button);
