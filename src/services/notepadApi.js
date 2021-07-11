@@ -1,6 +1,6 @@
 import { get, create } from "./request";
 
-const api = "https://api.github.com/notepads";
+const api = "https://api.github.com/gists";
 
 export const getNotePads = () =>
 {

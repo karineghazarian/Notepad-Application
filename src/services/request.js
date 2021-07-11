@@ -14,7 +14,7 @@ const fetchWithOptions = (url, method = "GET", data = {}) =>
             Accept: 'application/vnd.github.v3+json'
         },
     }, method === Method.POST | method === Method.PATCH ? { body: JSON.stringify(data) } : {})
-    )
+    ).then(response => response.json()).catch((error) => console.error(error))
 };
 
 export const get = (url) =>
