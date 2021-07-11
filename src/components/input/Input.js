@@ -1,10 +1,10 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import styles from "./input.module.css";
 
 function Input(props)
 {
-    const { type, placeholder, value, handleChange, pattern, isInvalid, errorMessage } = props;
-
+    const { type, placeholder, value, handleChange, pattern, isInvalid, errorMessage, disabled } = props;
     return (
         <div className={styles.inputContainer}>
             <input
@@ -15,6 +15,7 @@ function Input(props)
                 placeholder={placeholder}
                 className={styles.input}
                 pattern={pattern}
+                disabled={disabled}
             />
             {isInvalid ? <span className={styles.errorMessage}>{errorMessage}</span> : null}
         </div>
@@ -26,7 +27,8 @@ Input.defaultPropTypes = {
     placeholder: "Type a text",
     pattern: "",
     isInvalid: false,
-    errorMessage: "Error"
+    errorMessage: "Error",
+    disabled: false
 }
 
 Input.propTypes = {
@@ -36,8 +38,9 @@ Input.propTypes = {
     value: PropTypes.any.isRequired,
     pattern: PropTypes.string,
     isInvalid: PropTypes.bool,
-    errorMessage: PropTypes.string
+    errorMessage: PropTypes.string,
+    disabled: PropTypes.bool,
 }
 
-export default Input;
+export default React.memo(Input);
 

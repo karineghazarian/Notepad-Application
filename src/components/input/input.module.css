@@ -1,6 +1,6 @@
 .inputContainer {
     position: relative;
-    margin: 10px 0;
+    flex: 0.4;
 }
 
 .input {
@@ -8,13 +8,13 @@
     display: block;
     height: 40px;
     line-height: 16px;
-    padding: 3px 33px 4px 6px;
+    padding: 3px 0px 4px 6px;
     border: 1px solid var(--border);
     background-color: #fff;
     border-radius: 4px;
     font-size: 12px;
     outline: none;
-    width: 30%;
+    width: 100%;
 }
 
 .input::placeholder {
@@ -26,6 +26,4 @@
     color: red;
     font-size: 12px;
     position: absolute;
-    left: 6px;
-    top: 33px;
 }

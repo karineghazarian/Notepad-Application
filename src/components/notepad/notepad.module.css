@@ -1,0 +1,36 @@
+.notepadContainer {
+    max-width: var(--lg);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    margin: 0 auto;
+    padding: 20px;
+    min-width: var(--sm);
+    flex: 1;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.notepadLabel {
+    font-size: var(--fontSize);
+    color: var(--textColor);
+}
+
+.myNotesSpan {
+    margin-top: 25px;
+    display: inline-block;
+    color: var(--textColor);
+}
+
+.titleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.notepadButtonsSection{
+    display: flex;
+    flex: 0.2;
+    justify-content: space-around
+}

@@ -1,7 +1,7 @@
-export const maxCharacter255 = "^[0-9a-zA-Z]{0,3}$";
-export const maxCharacter1024 = "^[0-9a-zA-Z]{0,1024}$"
+export const maxCharacter255 = "^[0-9a-zA-Z]{0,4}$";
+export const maxCharacter1024 = "^[0-9a-zA-Z]{0,4}$"
 
-export default function isValid(pattern, value)
+export function isValid(pattern, value)
 {
     return RegExp(pattern).test(value);
 }

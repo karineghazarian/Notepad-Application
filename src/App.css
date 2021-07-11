@@ -5,16 +5,59 @@
   --placeholder: #AAA;
   --border: #CCC;
   --bodyBackground: #EEE;
-  --gray: #333;
-  --font: 'Arial';
+  --textColor: #333;
+  --font: Arial;
+  --sm: 320px;
+  --lg: 1024px;
+  --md: 481px;
+  --fontSize: 12px;
+  --buttonFontSize: 14px;
+  --mainTitleSize: 24px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--font);
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: inherit;
+  width: inherit;
 }
 
 .App {
-  text-align: center;
   font-family: 'Arial';
-  background-color: #EEE;
+  background-color: var(--bodyBackground);
+  height: inherit;
+  width: inherit;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 textarea:focus, input:focus {
-  color: #333;
+  color: var(--textColor);
+}
+
+.mainTitle {
+  font-size: 24px;
+  max-width: var(--lg);
+  margin: 0 auto;
+  color: var(--textColor);
+  font-weight: 500;
+  padding: 15px 0 15px 15px;
+  width: 100%;
 }

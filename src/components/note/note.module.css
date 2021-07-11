@@ -1,0 +1,26 @@
+.noteContainer {
+    display: flex;
+    margin: 10px 0 30px 0;
+    align-items: baseline;
+}
+
+.inputTextareaContainer {
+    width: 50%;
+}
+
+.buttonContainer {
+    flex: 1;
+    margin-left: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .noteContainer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .buttonContainer {
+        margin-left: 0px;
+    }
+  }
+

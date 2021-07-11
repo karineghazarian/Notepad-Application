@@ -1,27 +1,30 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import styles from "./button.module.css";
 
 function Button(props)
 {
-    const { backgroundColor, disabled, children } = props;
+    const { disabled, children, className, style } = props;
 
     return (
         <button
             disabled={disabled}
-            className={`${styles.button} ${disabled ? styles.disabled : ""}`}
-            style={{ backgroundColor }}>
+            className={`${styles.button} ${disabled ? styles.disabled : ""} ${className}`}
+            style={style}>
             {children}
         </button>
     );
 }
 
 Button.defaultPropTypes = {
-    backgroundColor: "var(--green)",
-    disabled: false
+    disabled: false,
+    className: "",
+    style: {}
 }
 Button.propTypes = {
-    backgroundColor: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    className: PropTypes.string,
+    style: PropTypes.object
 }
 
-export default Button;
+export default React.memo(Button);
