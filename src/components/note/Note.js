@@ -9,34 +9,49 @@ import { maxCharacter255, maxCharacter1000, isValid } from "../../utils/validati
 
 function Note(props)
 {
-    const [noteTitle, setNoteTitle] = useState("");
-    const [noteText, setNoteText] = useState("");
+    const [noteFilename, setNoteFilename] = useState("");
+    const [noteContent, setNoteContent] = useState("");
     const [isTitleUnique, setIsTitleUnique] = useState(false);
     const [isTitleInvalid, setIsTitleInvalid] = useState(false);
     const [isNoteTextInvalid, setIsNoteTextInvalid] = useState(false);
-    const { title, text, toCreate, addNote, titleUniqueChecker, deleteNote, id, updateNote } = props;
+    const { filename, content, toCreate, addNote, titleUniqueChecker, deleteNote, id, updateNote } = props;
 
     useEffect(() =>
     {
-        setNoteTitle(title)
-    }, [title])
+        if (!toCreate)
+        {
+            setNoteFilename(filename)
+        }
+    }, [filename, toCreate])
 
     useEffect(() =>
     {
-        setNoteText(text)
-    }, [text])
+        if (!toCreate)
+        {
+            setNoteContent(content)
+        }
+    }, [content, toCreate])
+
 
     function handleTitleChange(e)
     {
         const { value } = e.target
         const isUniqueTitle = titleUniqueChecker(value);
-        if (isValid(maxCharacter255, value) && (value || (noteTitle && !value)))
+        if (isValid(maxCharacter255, value) && (value || (noteFilename && !value)))
         {
-            setNoteTitle(value);
+            setNoteFilename(value);
             setIsTitleInvalid(false);
             if (!value || !isUniqueTitle)
             {
                 setIsTitleInvalid(true)
+            }
+            else if (!toCreate && id)
+            {
+                updateNote({
+                    id,
+                    title: value,
+                    content
+                })
             }
         }
         else
@@ -49,13 +64,21 @@ function Note(props)
     function handleNoteTextChange(e)
     {
         const { value } = e.target
-        if (isValid(maxCharacter1000, value) && (value || (noteText && !value)))
+        if (isValid(maxCharacter1000, value) && (value || (noteContent && !value)))
         {
             setIsNoteTextInvalid(false);
-            setNoteText(value);
+            setNoteContent(value);
             if (!value)
             {
                 setIsNoteTextInvalid(true)
+            }
+            else if (!toCreate && id)
+            {
+                updateNote({
+                    id,
+                    filename,
+                    content: value
+                })
             }
         }
         else
@@ -66,38 +89,38 @@ function Note(props)
 
     function handleAddNote()
     {
-        if (noteTitle && noteText && typeof addNote === "function")
+        if (noteFilename && noteContent && typeof addNote === "function")
         {
             addNote({
-                title: noteTitle,
-                text: noteText,
-                id: Date.now()
+                filename: noteFilename,
+                content: noteContent,
+                id: noteFilename
             });
-            setNoteTitle("");
-            setNoteText("");
+            setNoteFilename("");
+            setNoteContent("");
             setIsNoteTextInvalid(false);
             setIsTitleInvalid(false);
         }
     }
 
     return (
-        <div className={styles.noteContainer} style={toCreate && { flexDirection: "column" }}>
+        <div className={styles.noteContainer} style={toCreate ? { flexDirection: "column" } : {}}>
             <div className={styles.inputTextareaContainer}>
                 <Input
                     placeholder={"Enter note title..."}
-                    value={noteTitle}
+                    value={noteFilename}
                     handleChange={handleTitleChange}
                     isInvalid={isTitleInvalid}
-                    errorMessage={noteTitle ? (!isTitleUnique ? "*Note title must be unique" : "* Maximum 255 characters are allowed") : "*Title is not allowed to be empty!"}
+                    errorMessage={noteFilename ? (!isTitleUnique ? "*Note title must be unique" : "* Maximum 255 characters are allowed") : "*Title is not allowed to be empty!"}
                     name={"note title"}
                     id={id}
                 />
                 <Textarea
                     placeholder={"Enter a note..."}
-                    value={noteText}
+                    value={noteContent}
                     handleChange={handleNoteTextChange}
                     isInvalid={isNoteTextInvalid}
-                    errorMessage={noteText ? "*Maximum 1024 characters are allowed" : "*Title is not allowed to be empty!"}
+                    errorMessage={noteContent ? "*Maximum 1024 characters are allowed" : "*Title is not allowed to be empty!"}
                     name={"note text"}
                     id={id}
                 />
@@ -106,7 +129,7 @@ function Note(props)
                 <Button
                     style={{ backgroundColor: "var(--green)" }}
                     onClick={handleAddNote}
-                    disabled={!noteTitle || !noteText || isTitleInvalid || isNoteTextInvalid}>
+                    disabled={!noteFilename || !noteContent || isTitleInvalid || isNoteTextInvalid}>
                     Add
                 </Button>
                 :
@@ -121,22 +144,21 @@ function Note(props)
 }
 
 Note.defaultPropTypes = {
-    title: "",
-    text: "",
-    toCreate: false,
+    fileName: "",
+    content: "",
     deleteNote: () => { },
-    id: Date.now(),
-    updateNote: () => { }
+    updateNote: () => { },
+    id: ""
 }
 
 Note.propTypes = {
-    title: PropTypes.string,
-    text: PropTypes.string,
-    toCreate: PropTypes.bool,
+    fileName: PropTypes.string,
+    content: PropTypes.string,
+    toCreate: PropTypes.bool.isRequired,
     addNote: PropTypes.func,
     titleUniqueChecker: PropTypes.func.isRequired,
     deleteNote: PropTypes.func,
-    id: PropTypes.number,
+    id: PropTypes.string,
     updateNote: PropTypes.func
 }
 

@@ -4,14 +4,6 @@ import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 
 function App()
 {
-  // useEffect(() =>
-  // {
-  //   getNotePads().then((data) =>
-  //   {
-  //     console.log("data", data)
-  //   });
-  // }, []);
-
   return (
     <ErrorBoundary>
       <div className="App">

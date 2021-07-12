@@ -1,4 +1,4 @@
-import { get, create } from "./request";
+import { get, create, remove, update } from "./request";
 
 const api = "https://api.github.com/gists";
 
@@ -14,17 +14,17 @@ export const getNotePad = (id) =>
 
 export const createNotePad = (data) =>
 {
-    return create(api, { files: { ...data } })
+    return create(api, { description: data.title, files: { ...data.notes } });
 };
 
 export const updateNotePad = (id, data) =>
 {
-    return create(`${api}/${id}`, data)
+    return update(`${api}/${id}`, { description: data.title, files: { ...data.notes } });
 };
 
 export const deleteNotePad = (id) =>
 {
-    return create(`${api}/${id}`)
+    return remove(`${api}/${id}`)
 };
 
 

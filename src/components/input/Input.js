@@ -27,12 +27,12 @@ Input.defaultPropTypes = {
     isInvalid: false,
     errorMessage: "Error",
     disabled: false,
-    name: "input"
+    name: "input",
 }
 
 Input.propTypes = {
     type: PropTypes.string,
-    placeholder: PropTypes.bool,
+    placeholder: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     value: PropTypes.any.isRequired,
     isInvalid: PropTypes.bool,

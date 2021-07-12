@@ -29,7 +29,7 @@ Textarea.defaultPropTypes = {
 }
 
 Textarea.propTypes = {
-    placeholder: PropTypes.bool,
+    placeholder: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     value: PropTypes.any.isRequired,
     pattern: PropTypes.string,
