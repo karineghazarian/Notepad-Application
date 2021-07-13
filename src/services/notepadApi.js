@@ -14,12 +14,26 @@ export const getNotePad = (id) =>
 
 export const createNotePad = (data) =>
 {
-    return create(api, { description: data.title, files: { ...data.notes } });
+    const files = data.notes.reduce((acc, note) =>
+    {
+        acc[note.id] = note;
+        return acc;
+    }, {})
+    return create(api, { description: data.title, files });
 };
 
 export const updateNotePad = (id, data) =>
 {
-    return update(`${api}/${id}`, { description: data.title, files: { ...data.notes } });
+    let obj = {};
+    if (data.title)
+    {
+        obj.description = data.title;
+    }
+    if (data.files)
+    {
+        obj.files = data.files;
+    }
+    return update(`${api}/${id}`, obj);
 };
 
 export const deleteNotePad = (id) =>

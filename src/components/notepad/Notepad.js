@@ -17,6 +17,7 @@ function Notepad()
     const [notepad, setNotepad] = useState(initialNotepad);
     const [isTitleInValid, setIsTitleInValid] = useState(false);
     const initialNotepadRef = useRef({ ...initialNotepad });
+    const notepadChangedObjRef = useRef({});
 
     useEffect(() =>
     {
@@ -41,6 +42,12 @@ function Notepad()
             {
                 setIsTitleInValid(true)
             }
+            else
+            {
+                Object.assign(notepadChangedObjRef.current, {
+                    title: value
+                })
+            }
         }
         else
         {
@@ -57,22 +64,39 @@ function Notepad()
     //* Note Actions *//
     function addNote(note)
     {
-        setNotepad((prevNotepad) => (
+        setNotepad((prevNotepad) =>
+        {
+            const notes = [...prevNotepad.notes, note];
+            const files = notes.reduce((acc, note) =>
             {
-                ...prevNotepad,
-                notes: [...prevNotepad.notes, note]
-            }
-        ));
+                acc[note.id] = note;
+                return acc;
+            }, {});
+            Object.assign(notepadChangedObjRef.current, { files });
+            return { ...prevNotepad, notes };
+        });
     }
 
     function deleteNote(id)
     {
-        setNotepad((prevNotepad) => (
+        setNotepad((prevNotepad) =>
+        {
+            const notes = prevNotepad.notes.filter((note) => note.id !== id);
+            const files = notes.reduce((acc, note) =>
             {
-                ...prevNotepad,
-                notes: prevNotepad.notes.filter((note) => note.id !== id)
-            }
-        ));
+                acc[note.id] = note;
+                return acc;
+            }, {});
+            files[id] = {};
+            notepadChangedObjRef.current = {
+                ...notepadChangedObjRef.current,
+                files: {
+                    ...notepadChangedObjRef.current.files,
+                    ...files
+                }
+            };
+            return { ...prevNotepad, notes };
+        });
     }
 
     function updateNote(noteToChange)
@@ -85,11 +109,15 @@ function Notepad()
             setNotepad((prevNotepad) =>
             {
                 const notes = [...prevNotepad.notes];
-                notes.splice(index, 1, noteToChange)
-                return {
-                    ...prevNotepad,
-                    notes
-                };
+                notes.splice(index, 1, noteToChange);
+                const files = notes.reduce((acc, note) =>
+                {
+                    acc[note.id] = note;
+                    return acc;
+                }, {});
+
+                Object.assign(notepadChangedObjRef.current, { files });
+                return { ...prevNotepad, notes };
             })
         }
     }
@@ -99,21 +127,22 @@ function Notepad()
         const notepadId = window.localStorage.getItem("notepadId")
         if (notepadId)
         {
-            updateNotePad(notepadId, notepad).then(setNewNotepadData)
+            updateNotePad(notepadId, notepadChangedObjRef.current).then(setNewNotepadData)
         }
         else
         {
             createNotePad(notepad).then(data =>
             {
-                setNewNotepadData(data)
+                notepadChangedObjRef.current = {};
                 window.localStorage.setItem("notepadId", data.id);
+                setNewNotepadData(data);
             })
         }
     }
 
     function removeNotePad()
     {
-        deleteNotePad(notepad.id).then(data =>
+        deleteNotePad(notepad.id).then(() =>
         {
             setNotepad({
                 title: "",
@@ -125,23 +154,26 @@ function Notepad()
 
     function setNewNotepadData(data)
     {
-        let notes = [];
-        Object.keys(data.files).forEach((fileKey) =>
+        if (data?.files)
         {
-            const note = data.files[fileKey];
-            notes.push({
-                filename: note.filename,
-                content: note.content,
-                id: note.filename
+            let notes = [];
+            Object.keys(data.files).forEach((fileKey) =>
+            {
+                const note = data.files[fileKey];
+                notes.push({
+                    filename: note.filename,
+                    content: note.content,
+                    id: note.filename
+                })
             })
-        })
-        const initialData = {
-            title: data.description,
-            id: data.id,
-            notes
+            const initialData = {
+                title: data.description,
+                id: data.id,
+                notes
+            }
+            initialNotepadRef.current = { ...initialData };
+            setNotepad(initialData);
         }
-        initialNotepadRef.current = { ...initialData };
-        setNotepad(initialData);
     }
     return (
         <div className={styles.notepadContainer}>

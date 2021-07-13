@@ -89,7 +89,7 @@ function Note(props)
 
     function handleAddNote()
     {
-        if (noteFilename && noteContent && typeof addNote === "function")
+        if (noteFilename && noteContent)
         {
             addNote({
                 filename: noteFilename,

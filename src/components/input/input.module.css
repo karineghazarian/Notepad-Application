@@ -1,6 +1,7 @@
 .inputContainer {
     position: relative;
     flex: 0.4;
+    min-width: 130px;
 }
 
 .input {

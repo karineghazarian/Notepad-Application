@@ -5,7 +5,6 @@ import styles from "./button.module.css";
 function Button(props)
 {
     const { disabled, children, className, style, onClick } = props;
-
     return (
         <button
             disabled={disabled}
